@@ -2,3 +2,5 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: same-origin
   X-Robots-Tag: noindex
+/sw.js
+  Cache-Control: no-cache
