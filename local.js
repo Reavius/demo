@@ -1,8 +1,8 @@
 /* Онлайн-пример (Netlify, без сервера): та же логика, что у сервера (core.js), но заявки и правки хранятся
    в этом браузере (localStorage) — у каждого свои. Подключается только в сборке venue/build-static.mjs. */
-import { venueCore, Fail } from "./core.js?v=adee8ba3";
-import { SEED } from "./seed.js?v=adee8ba3";
-import { BAR } from "./bar-data.js?v=adee8ba3";
+import { venueCore, Fail } from "./core.js?v=d9b3d9a3";
+import { SEED } from "./seed.js?v=d9b3d9a3";
+import { BAR } from "./bar-data.js?v=d9b3d9a3";
 
 const K = "mechty-venue-", mem = {};
 const store = {
