@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="venue.css?v=ff9351c0">
+<link rel="stylesheet" href="venue.css?v=9f99491a">
 <script>/* заставка — один раз за вкладку, как у барного гида; при «уменьшить движение» — нет */
 try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches){ document.documentElement.classList.add("intro-on"); setTimeout(function(){ document.documentElement.classList.remove("intro-on"); }, 6000); } } catch (e) {}</script>
 </head>
@@ -26,6 +26,7 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
     <rect class="vi-shine" x="-160" y="-20" width="130" height="320" fill="url(#viShine)" clip-path="url(#viClip)" transform="skewX(-20)"/></svg>
   <p class="vi-word">кафе, бар, вечеринки</p>
 </div>
+<div class="wm" aria-hidden="true"></div>
 <div class="demo dsite"><b>Демо-версия сайта</b><span class="dmore">: бронь и заявки пока не работают</span></div>
 <header class="vtop">
   <div class="wrap vtop-in">
@@ -230,8 +231,8 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle"></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Фото"></div>
 <div class="story" id="story" hidden role="dialog" aria-modal="true" aria-label="Сторис"></div>
-<script src="vendor/gsap.min.js?v=ff9351c0" defer></script>
-<script type="module" src="local.js?v=ff9351c0"></script>
-<script src="site.js?v=ff9351c0" defer></script>
+<script src="vendor/gsap.min.js?v=9f99491a" defer></script>
+<script type="module" src="local.js?v=9f99491a"></script>
+<script src="site.js?v=9f99491a" defer></script>
 </body>
 </html>
