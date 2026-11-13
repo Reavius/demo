@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Manrope:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="venue.css?v=9f99491a">
+<link rel="stylesheet" href="venue.css?v=40a02e3b">
 <script>/* заставка — один раз за вкладку, как у барного гида; при «уменьшить движение» — нет */
 try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-motion: reduce)").matches){ document.documentElement.classList.add("intro-on"); setTimeout(function(){ document.documentElement.classList.remove("intro-on"); }, 6000); } } catch (e) {}</script>
 </head>
@@ -167,6 +167,7 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
   <section class="sec wrap" id="photo">
     <div class="sech"><div><h2>Фотоотчёты</h2><p class="sub">Ищите себя на фото — альбомы фотографов открываются по ссылке.</p></div></div>
     <div class="albums" id="albList"></div>
+    <div class="albmore" id="albMore"></div>
   </section>
 
   <section class="sec wrap" id="tg">
@@ -231,8 +232,8 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle"></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Фото"></div>
 <div class="story" id="story" hidden role="dialog" aria-modal="true" aria-label="Сторис"></div>
-<script src="vendor/gsap.min.js?v=9f99491a" defer></script>
-<script type="module" src="local.js?v=9f99491a"></script>
-<script src="site.js?v=9f99491a" defer></script>
+<script src="vendor/gsap.min.js?v=40a02e3b" defer></script>
+<script type="module" src="local.js?v=40a02e3b"></script>
+<script src="site.js?v=40a02e3b" defer></script>
 </body>
 </html>
