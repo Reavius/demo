@@ -1,4 +1,4 @@
-/* Админка сайта «Мечты»: заявки и контент из общего серверного хранилища. */
+/* Админка сайта «Мечты»: заявки гостей и правка всех разделов — с телефона, без программиста. */
 "use strict";
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -8,6 +8,7 @@ const tTx = s => { const d = new Date(s); return dTx(s) + ", " + String(d.getHou
 let D = null, tab = "inbox", box = "book", edit = null, onlyNew = false;
 
 async function api(p, body){
+  if (window.VENUE_LOCAL) return window.VENUE_LOCAL(p, body);                 // онлайн-пример: всё в этом браузере (venue/local.js)
   try {
     const r = await fetch(p, body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {});
     const d = await r.json().catch(() => ({}));
@@ -48,7 +49,7 @@ const newOf = k => (D.inbox[k] || []).filter(r => r.st === "new").length;
 function draw(){
   const app = $("app");
   if (!D){
-    app.innerHTML = '<form class="card login" id="lf"><h1 style="font-family:var(--display);font-size:36px;margin:0 0 6px">Вход</h1><p class="hint">Пароль редактора — у управляющего. Используйте выданную управляющим парольную фразу.</p>' +
+    app.innerHTML = '<form class="card login" id="lf"><h1 style="font-family:var(--display);font-size:36px;margin:0 0 6px">Вход</h1><p class="hint">Пароль редактора — у управляющего. Пять слов через пробел; регистр не важен.</p>' +
       '<input class="in" type="password" name="pw" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="Пароль редактора" aria-label="Пароль редактора"><button class="btn" style="margin-top:12px;width:100%">Войти</button><p class="fmsg bad" id="lm"></p></form>';
     $("lf").onsubmit = async e => { e.preventDefault(); const b = e.target.querySelector("button"); b.disabled = true; $("lm").textContent = "";
       const d = await api("/api/admin/login", {pw: e.target.pw.value}); b.disabled = false; if (d.error){ $("lm").textContent = d.error; e.target.pw.select(); return; } reload(); };
@@ -56,9 +57,11 @@ function draw(){
   }
   const n = Object.keys(BOX).reduce((a, k) => a + newOf(k), 0);
   const tabs = [["inbox", "Заявки", n]].concat(Object.keys(SCH).map(k => [k, SCH[k].t, 0])).concat([["info", "Контакты", 0]]);
-  app.innerHTML = '<div class="adm"><div class="admh"><h1>«' + esc(D.site.info.name) + '» · админка</h1><span><a class="btn small ghost" href="./" target="_blank">Открыть сайт</a> ' + '<button type="button" class="link" id="out">Выйти</button></span></div>' +
+  app.innerHTML = '<div class="adm"><div class="admh"><h1>«' + esc(D.site.info.name) + '» · админка</h1><span><a class="btn small ghost" href="./" target="_blank">Открыть сайт</a> ' + (window.VENUE_RESET ? '<button type="button" class="link" id="reset">Сбросить пример</button> ' : "") + '<button type="button" class="link" id="out">Выйти</button></span></div>' +
+    (window.VENUE_LOCAL ? '<p class="hint">Онлайн-пример: заявки и правки хранятся только в этом браузере — у каждого свои. В рабочей версии они общие и приходят администратору.</p>' : "") +
     '<div class="atabs">' + tabs.map(([k, t, c]) => '<button type="button" class="chip" data-tab="' + k + '" aria-pressed="' + (k === tab) + '">' + esc(t) + (c ? '<i>' + c + '</i>' : "") + '</button>').join("") + '</div><div id="pane"></div></div>';
   $("out").onclick = async () => { await api("/api/admin/logout", {}); D = null; draw(); };
+  if ($("reset")) $("reset").onclick = () => { if (confirm("Вернуть пример к началу? Ваши заявки и правки в этом браузере удалятся.")){ window.VENUE_RESET(); location.reload(); } };
   app.querySelector(".atabs").onclick = e => { const b = e.target.closest("[data-tab]"); if (b){ tab = b.dataset.tab; edit = null; draw(); } };
   if (tab === "inbox") drawInbox(); else if (tab === "info") drawInfo(); else drawCol(tab);
 }
@@ -71,7 +74,6 @@ function drawInbox(){
     (list.length ? list.map(r => '<article class="card ali"><div class="at"><b>' + esc(r.name || r.email || "") + '</b><span class="st ' + esc(r.st) + '">' + esc(B.st[r.st] || r.st) + '</span></div>' +
       '<div class="am">' + esc(B.line(r)) + '</div>' + (r.phone ? '<div><a href="tel:' + esc(r.phone.replace(/[^\d+]/g, "")) + '">' + esc(r.phone) + '</a></div>' : "") +
       (r.comment || r.about ? '<div class="am">«' + esc(r.comment || r.about) + '»</div>' : "") +
-      (r.source ? '<div class="am">Источник: ' + (r.source === 'telegram' ? 'Telegram-бот' : 'сайт') + '</div>' : '') +
       '<div class="am">пришла ' + esc(tTx(r.at)) + (r.stAt ? " · изменено " + esc(tTx(r.stAt)) : "") + '</div>' +
       (Object.keys(B.st).length > 1 ? '<div class="ab">' + Object.keys(B.st).filter(s => s !== r.st).map(s => '<button type="button" class="link" data-st="' + s + '" data-id="' + esc(r.id) + '">' + esc(B.st[s]) + '</button>').join("") +
         '</div>' : "") + '</article>').join("")
