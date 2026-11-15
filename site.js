@@ -1,4 +1,4 @@
-/* Сайт заведения «Мечты»: всё содержимое — с сервера (/api/site), правится в админке. */
+/* Сайт «Мечты»: содержимое берётся из общего серверного API (/api/site). */
 "use strict";
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -14,7 +14,6 @@ const rub = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + "
 let S = null, mTab = "kitchen", mSec = "", bkZone = "", bkWant = "";
 
 async function api(p, body){
-  if (window.VENUE_LOCAL) return window.VENUE_LOCAL(p, body);                 // онлайн-пример: всё в этом браузере (venue/local.js)
   try {
     const r = await fetch(p, body ? {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)} : {});
     const d = await r.json().catch(() => ({}));
@@ -400,6 +399,9 @@ function drawInfo(){
   $("ctAddr").textContent = String(I.address || "").replace(/(^|\s)(ул|д|корп|стр|пр)\. /g, "$1$2.\u00a0").replace(/, (\d)/g, ",\u00a0$1");      /* «корп. 1» не разрывается */
   $("ctFloor").textContent = I.floor || ""; putTel($("ctTel"), I.phone); putTel($("ctTel2"), I.phone2);
   if (putTg($("ctTga"), I.tgbook)) $("ctTga").textContent = "Telegram: @" + tgAcc(I.tgbook);
+  const botLink = String(I.bookingBotUrl || "");
+  $("bkTelegram").hidden = !botLink;
+  if (botLink) $("bkTelegram").href = botLink;
   $("ctSoc").innerHTML = [I.tg ? '<a href="' + esc(I.tg) + '" target="_blank" rel="noopener">Telegram-канал</a>' : "", I.ig ? '<a href="' + esc(I.ig) + '" target="_blank" rel="noopener">Instagram</a>' : ""].join("");
   $("tgBtn").href = I.tg || "#"; $("ftGuide").href = I.guide || "#";
   $("mapY").href = $("revY").href = "https://yandex.ru/maps/?text=" + q; $("map2").href = $("rev2").href = "https://2gis.ru/search/" + q;
@@ -662,26 +664,6 @@ function intro(then){
   ov.addEventListener("click", () => tl.progress(1), {once: true});                // нажали — сразу к сайту
 }
 
-/* ── окно «Это демо-версия сайта» — при каждом заходе на сайт, закрывается кнопкой «Ознакомлен» ── */
-function demoNote(then){
-  const m = $("dmodal"), ok = $("dmOk"), tel = $("dmTel"), ret = document.activeElement;
-  putTel(tel, S.info.phone); putTel($("dmTel2"), S.info.phone2); $("dmTel2w").hidden = !S.info.phone2; $("dmTgw").hidden = !putTg($("dmTg"), S.info.tgbook);
-  m.hidden = false; document.body.style.overflow = "hidden";
-  if (window.gsap && !RM()) gsap.from(m.querySelector(".dmb"), {y: 24, opacity: 0, duration: .45, ease: "power2.out"});
-  ok.focus({preventScroll: true});
-  const keys = e => {                                                            // фокус — только внутри окна
-    if (e.key !== "Tab") return;
-    const f = [tel, ok], i = f.indexOf(document.activeElement);
-    e.preventDefault(); f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
-  };
-  m.addEventListener("keydown", keys);
-  ok.addEventListener("click", () => {
-    m.removeEventListener("keydown", keys); m.hidden = true; document.body.style.overflow = "";
-    if (ret && ret.focus && ret !== document.body) ret.focus({preventScroll: true});
-    then();
-  }, {once: true});
-}
-
 /* ── неон названия на первом экране зажигается, как вывеска (без «уменьшить движение») ── */
 function neonOn(){
   const t = $("hName");
@@ -700,5 +682,5 @@ function neonOn(){
   $("bqDate").min = S.today;
   drawInfo(); drawEvents(); drawBook(); drawZones(); drawBanquet(); drawMenu(); drawPromoNews(); drawAlbums(); drawStories(); drawQuiz();
   live(); setInterval(live, 30000);
-  heroVideo(); intro(() => demoNote(neonOn)); route();
+  heroVideo(); intro(neonOn); route();
 })();

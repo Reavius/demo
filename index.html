@@ -2,10 +2,36 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="googlebot" content="index, follow, max-image-preview:large">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>«Мечты» — кафе, VIP, танцпол и мансарда</title>
-<meta name="description" content="Кафе, VIP, танцпол и мансарда в Уфе: афиша, бронь столов, банкеты, меню и карта бара.">
+<title>«Мечты» — кафе, бар и ночной клуб в центре Уфы</title>
+<meta name="description" content="Кафе, бар и ночной клуб «Мечты» в центре Уфы. Четыре зала, афиша вечеринок, меню, коктейли и банкеты. Мустая Карима, 6, корп. 1.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="«Мечты»">
+<meta property="og:title" content="«Мечты» — кафе, бар и ночной клуб в центре Уфы">
+<meta property="og:description" content="Четыре зала, афиша вечеринок, меню, коктейли и банкеты. Уфа, ул. Мустая Карима, 6, корп. 1.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NightClub",
+  "name": "Мечты",
+  "description": "Кафе, бар и ночной клуб в центре Уфы. Четыре зала, афиша вечеринок, меню, коктейли и банкеты.",
+  "telephone": ["+7 (347) 298-13-12", "+7 (903) 311-13-12"],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ул. Мустая Карима, 6, корп. 1, 2 этаж",
+    "addressLocality": "Уфа",
+    "addressRegion": "Республика Башкортостан",
+    "addressCountry": "RU"
+  },
+  "sameAs": [
+    "https://t.me/clubmechti",
+    "https://www.instagram.com/clubmechti"
+  ]
+}
+</script>
 <meta name="theme-color" content="#0E1014">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -26,7 +52,6 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
     <rect class="vi-shine" x="-160" y="-20" width="130" height="320" fill="url(#viShine)" clip-path="url(#viClip)" transform="skewX(-20)"/></svg>
   <p class="vi-word">кафе, бар, вечеринки</p>
 </div>
-<div class="demo dsite"><b>Демо-версия сайта</b><span class="dmore">: бронь и заявки пока не работают</span></div>
 <header class="vtop">
   <div class="wrap vtop-in">
     <a class="logo" href="#top" aria-label="«Мечты» — наверх"><svg viewBox="0 0 746 275" aria-hidden="true"><use href="#mlogo"/></svg></a>
@@ -69,7 +94,7 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
     <div class="wrap">
       <p class="live" id="live"></p>
       <h1 id="hName" class="neon"><svg viewBox="0 0 746 275" aria-hidden="true"><use href="#mlogo"/></svg><span class="sr" id="hNameTx">Мечты</span></h1>
-      <p class="lede" id="hTag"></p>
+      <p class="lede" id="hTag">Днём — кухня и бар, ночью — вечеринки в самом центре Уфы.</p>
       <div class="acts"><a class="btn" href="#book">Забронировать стол</a><a class="btn ghost" href="#afisha">Афиша</a></div>
       <div id="hNext"></div>
     </div>
@@ -106,6 +131,7 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
           <input type="hidden" name="event" id="bkEvent">
           <label class="agree"><input type="checkbox" name="consent"> <span>Согласен на обработку персональных данных по <a href="privacy.html" target="_blank">политике конфиденциальности</a></span></label>
           <button class="btn wide" type="submit">Забронировать</button>
+          <a class="btn wide ghost" id="bkTelegram" href="#" target="_blank" rel="noopener" hidden>Забронировать через Telegram</a>
           <p class="fmsg" role="status"></p>
         </div>
       </form>
@@ -220,20 +246,10 @@ try { if (!sessionStorage.getItem("mv-intro") && !matchMedia("(prefers-reduced-m
   </div>
 </footer>
 
-<div class="dmodal" id="dmodal" hidden role="dialog" aria-modal="true" aria-labelledby="dmT" aria-describedby="dmX">
-  <div class="dmb">
-    <svg class="dml" viewBox="0 0 746 275" aria-hidden="true"><use href="#mlogo"/></svg>
-    <h2 id="dmT">Это демо-версия сайта</h2>
-    <p id="dmX">Сайт пока показывает, как всё будет выглядеть. Функционал нерабочий: бронь стола, заявки на банкеты и отклики никуда не отправляются.</p>
-    <p class="dmp">Чтобы забронировать стол, позвоните: <a id="dmTel" href="#"></a><span id="dmTel2w" hidden> или <a id="dmTel2" href="#"></a></span><span id="dmTgw" hidden><br>или напишите в Telegram: <a id="dmTg" href="#" target="_blank" rel="noopener"></a></span></p>
-    <button type="button" class="btn wide" id="dmOk">Ознакомлен</button>
-  </div>
-</div>
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="shTitle"></div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Фото"></div>
 <div class="story" id="story" hidden role="dialog" aria-modal="true" aria-label="Сторис"></div>
 <script src="vendor/gsap.min.js?v=907d5e85" defer></script>
-<script type="module" src="local.js?v=907d5e85"></script>
-<script src="site.js?v=907d5e85" defer></script>
+<script src="site.js?v=6" defer></script>
 </body>
 </html>

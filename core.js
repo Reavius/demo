@@ -1,6 +1,5 @@
-/* Сайт заведения — логика без привязки к месту хранения: одна и та же для сервера (venue/server.mjs, данные в файлах)
-   и для онлайн-примера (venue/local.js, данные в браузере). Хранилище, загрузка фото и карта бара —
-   снаружи: store.get/set(имя), upload(dataURL) → адрес, bar() → карта бара из барного гида. */
+/* Сайт заведения — бизнес-логика без привязки к месту хранения. Сервер передаёт
+   хранилище, загрузку фото и карту бара: store.get/set(имя), upload(dataURL) → адрес, bar() → карта бара. */
 export class Fail extends Error {}
 
 const hex = (rnd, n) => Array.from(rnd(n), b => b.toString(16).padStart(2, "0")).join("");
@@ -59,12 +58,13 @@ export function venueCore({ seed, store, upload, bar = () => [], rnd = webRnd, d
 
   /* заявки гостей */
   const zoneOf = id => (site.zones || []).find(z => z.id === id && !z.hidden);
-  function addBook(b){
+  function addBook(b, trustedTelegram = false){
     const z = zoneOf(str(b.zone, 20));
     if (!z) throw new Fail("Выберите зону.");
     if (z.nobook) throw new Fail("«" + z.name + "» не бронируется — выберите другую зону.");
     const r = { id: uid("b"), at: new Date().toISOString(), st: "new", zone: z.id, date: day(b.date), time: str(b.time, 5), guests: Math.round(+b.guests || 0),
-      name: need(str(b.name, 80), "Как к вам обращаться?"), phone: phone(b.phone), comment: str(b.comment, 500), event: str(b.event, 20) };
+      name: need(str(b.name, 80), "Как к вам обращаться?"), phone: phone(b.phone), comment: str(b.comment, 500), event: str(b.event, 20),
+      source: trustedTelegram ? "telegram" : "site", tgChatId: trustedTelegram && /^[0-9-]{1,24}$/.test(str(b.tgChatId, 24)) ? str(b.tgChatId, 24) : "" };
     if (r.date < today()) throw new Fail("Эта дата уже прошла.");
     const days = daysOf(z.days);
     if (days.length && !days.includes(new Date(r.date + "T12:00:00Z").getUTCDay())) throw new Fail("«" + z.name + "» бронируется: " + z.days + ". Выберите другой день.");
@@ -170,11 +170,11 @@ export function venueCore({ seed, store, upload, bar = () => [], rnd = webRnd, d
     "POST /api/admin/save": adminSave, "POST /api/admin/del": adminDel, "POST /api/admin/status": adminSt, "POST /api/admin/upload": adminUpload
   };
   /* запрос → {code, body}; админские — только с isAdmin */
-  function handle(method, path, body, isAdmin){
+  function handle(method, path, body, isAdmin, trustedTelegram = false){
     const key = method + " " + path;
     try {
       if (ADMIN[key]) return isAdmin ? { code: 200, body: ADMIN[key](body || {}) } : { code: 401, body: { error: "Войдите в админку." } };
-      if (API[key]) return { code: 200, body: API[key](body || {}) };
+      if (API[key]) return { code: 200, body: API[key](body || {}, trustedTelegram) };
       return { code: 404, body: { error: "Нет такого запроса." } };
     } catch (e) {
       if (e instanceof Fail) return { code: 400, body: { error: e.message } };
